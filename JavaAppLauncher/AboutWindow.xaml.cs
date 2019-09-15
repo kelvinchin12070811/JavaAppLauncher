@@ -3,7 +3,6 @@
 //License, v. 2.0. If a copy of the MPL was not distributed with this
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //***********************************************************************************************************
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,36 +15,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace JavaAppLauncher
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AboutWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AboutWindow : Window
     {
-        public MainWindow()
+        public AboutWindow()
         {
             InitializeComponent();
         }
 
-        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog jarSelector = new OpenFileDialog();
-            jarSelector.Filter = "Java runable jar file (*.jar)|*.jar|All file (*.*)|*.*";
-            jarSelector.DefaultExt = ".jar";
-
-            bool? result = jarSelector.ShowDialog();
-            if (result == true)
-                jarFilename.Text = jarSelector.FileName;
-        }
-
-        private void BtnAbout_Click(object sender, RoutedEventArgs e)
-        {
-            AboutWindow about = new AboutWindow();
-            about.Show();
+            Close();
         }
     }
 }

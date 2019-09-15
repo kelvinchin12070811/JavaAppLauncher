@@ -63,7 +63,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
             </TabItem>
             <TabItem Header="Versin info"/>
         </TabControl>
-        <Button Content="Generate" HorizontalAlignment="Right" Margin="0,6.333,8.333,5.667" Grid.Row="1" VerticalAlignment="Center" Width="75"/>
+        <Button x:Name="btnGenerate" Content="Generate" HorizontalAlignment="Right" Margin="0,0,85.333,0" Grid.Row="1" VerticalAlignment="Center" Width="75"/>
+        <Button x:Name="btnAbout" Content="About" HorizontalAlignment="Right" Grid.Row="1" VerticalAlignment="Center" Width="75" Margin="0,0,5.333,0" Click="BtnAbout_Click"/>
+        <Button x:Name="btnLoad" Content="Load" HorizontalAlignment="Right" Margin="0,0,165.333,0" Grid.Row="1" VerticalAlignment="Center" Width="75"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Right" Grid.Row="1" VerticalAlignment="Center" Width="75" Margin="0,0,245.333,0"/>
 
     </Grid>
 </Window>
