@@ -6,11 +6,29 @@ namespace Launcher
 {
     class Launch
     {
-        public static void StartApp()
+        static void StartApp(ConfigReader reader, string[] args)
         {
+            Process jvm = new Process();
+            jvm.StartInfo.FileName = reader.GetJvmPath();
+            jvm.StartInfo.UseShellExecute = false;
+            jvm.StartInfo.Arguments = string.Format("{0} -jar \"{1}\" {2}",
+                reader.JvmArgs, reader.Filename, CatArgs(args));
+            jvm.Start();
         }
 
-        public static void Main(string[] args)
+        static string CatArgs(string[] args)
+        {
+            string line = "";
+
+            foreach (var itr in args)
+            {
+                line += string.Format("\"{0}\" ", itr);
+            }
+            line = line.Substring(0, line.Length - 1);
+            return line;
+        }
+
+        static void Main(string[] args)
         {
             ConfigReader cfg = null;
             try
@@ -25,12 +43,7 @@ namespace Launcher
                         throw new JvmNotFoundException(cfg.MinJvmVersion);
                 }
 
-                Process jvm = new Process();
-                jvm.StartInfo.FileName = cfg.GetJvmPath();
-                jvm.StartInfo.UseShellExecute = false;
-                jvm.StartInfo.Arguments = string.Format("{0} -jar \"{1}\"", cfg.JvmArgs, cfg.Filename);
-
-                jvm.Start();
+                StartApp(cfg, args);
             }
             catch (Exception e)
             {
