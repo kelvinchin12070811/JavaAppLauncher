@@ -7,14 +7,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace Launcher
 {
     class ConfigReader
     {
+        public const string DEF_APP_NAME = "Kelvin's Java App Launcher";
         public string Appname { get; private set; }
         public bool BundledJvm { get; private set; }
-        public string Filename { get; private set; }
+        public string Jarfile { get; private set; }
         public string MaxJvmVersion { get; private set; }
         public string MinJvmVersion { get; private set; }
         public string JvmArgs { get; private set; }
@@ -25,13 +27,12 @@ namespace Launcher
 
         public ConfigReader()
         {
-            string jsonAppInfo = ReadAppInfo();
-            if (jsonAppInfo == null)
-                throw new Exception("Error getting application info.");
+            string asmname = "";
+            string jsonAppInfo = ReadAppInfo(ref asmname);
 
             var appinfo = JsonConvert.DeserializeObject(jsonAppInfo) as JObject;
-            Appname = GetContent(appinfo["app"]["name"]);
-            Filename = GetContent(appinfo["app"]["jar"]);
+            Appname = GetContent(appinfo["app"]["name"], DEF_APP_NAME);
+            Jarfile = asmname + ".jar";
             BundledJvm = GetContent(appinfo["jvm"]["bundled"], "").Equals("true") ? true : false;
             MinJvmVersion = GetContent(appinfo["jvm"]["version"]["min"]);
             MaxJvmVersion = GetContent(appinfo["jvm"]["version"]["max"]);
@@ -42,7 +43,7 @@ namespace Launcher
         
         public string GetJvmPath()
         {
-            if (BundledJvm) return Directory.GetCurrentDirectory() + "/jvm/bin/javaw.exe";
+            if (BundledJvm) return GetApplicationDirectory() + "/jvm/bin/javaw.exe";
             else if (JvmPath != null) return JvmPath;
 
             return "javaw.exe";
@@ -53,13 +54,20 @@ namespace Launcher
             return obj == null ? def : obj.ToString();
         }
 
-        private string ReadAppInfo()
+        private string ReadAppInfo(ref string asmname)
         {
-            if (!File.Exists(Directory.GetCurrentDirectory() + "/applaunchercfg.json"))
-                return null;
+            asmname = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
+            var infoFile = asmname + ".japplaunch.json";
+            if (!File.Exists(infoFile))
+                throw new Exception(string.Format("Failed to load application info from {0}", infoFile));
 
-            Filename = Filename + Directory.GetCurrentDirectory();
-            return File.ReadAllText(Directory.GetCurrentDirectory() + "/applaunchercfg.json");
+            return File.ReadAllText(infoFile);
+        }
+
+        private string GetApplicationDirectory()
+        {
+            string path = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(path);
         }
     }
 }

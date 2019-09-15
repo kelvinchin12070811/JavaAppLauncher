@@ -17,7 +17,7 @@ namespace Launcher
             jvm.StartInfo.FileName = reader.GetJvmPath();
             jvm.StartInfo.UseShellExecute = false;
             jvm.StartInfo.Arguments = string.Format("{0} -jar \"{1}\" {2}",
-                reader.JvmArgs, reader.Filename, CatArgs(args));
+                reader.JvmArgs, reader.Jarfile, CatArgs(args));
             jvm.Start();
         }
 
@@ -29,7 +29,7 @@ namespace Launcher
             {
                 line += string.Format("\"{0}\" ", itr);
             }
-            line = line.Substring(0, line.Length - 1);
+            line = line.Substring(0, Math.Max(0, line.Length - 1));
             return line;
         }
 
@@ -52,7 +52,7 @@ namespace Launcher
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Java app launcher");
+                MessageBox.Show(e.Message, cfg == null ? ConfigReader.DEF_APP_NAME : cfg.Appname);
 
                 if (e is JvmNotFoundException && !cfg.JvmDlPath.Equals(""))
                     Process.Start(cfg.JvmDlPath);
