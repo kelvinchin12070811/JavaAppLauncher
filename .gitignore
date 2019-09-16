@@ -338,3 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+*.props
+
+# ZipLib library, static linked stl version
+wbenny-ziplib-176e4b6d51fc/*
