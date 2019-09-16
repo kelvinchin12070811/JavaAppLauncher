@@ -52,9 +52,9 @@ namespace Launcher
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, cfg == null ? ConfigReader.DEF_APP_NAME : cfg.Appname);
+                MessageBox.Show(e.Message, cfg?.Appname ?? ConfigReader.DEF_APP_NAME);
 
-                if (e is JvmNotFoundException && !cfg.JvmDlPath.Equals(""))
+                if (e is JvmNotFoundException && cfg.JvmDlPath != "")
                     Process.Start(cfg.JvmDlPath);
             }
         }
