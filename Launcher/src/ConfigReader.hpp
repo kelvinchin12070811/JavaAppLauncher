@@ -6,6 +6,7 @@
 #pragma once
 #include <boost/property_tree/ptree.hpp>
 #include <string>
+#include <sstream>
 #include <vector>
 
 class ConfigReader
@@ -19,7 +20,7 @@ public:
 
 private:
 	boost::property_tree::ptree parseLauncherCfg();
-	std::istream* getLauncherCfg();
+	std::stringstream getLauncherCfg();
 
 public:// Accessors
 	std::string getAppname() const;

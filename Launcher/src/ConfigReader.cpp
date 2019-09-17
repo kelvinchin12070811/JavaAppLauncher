@@ -4,10 +4,11 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 //***********************************************************************************************************
 #include <boost/property_tree/ini_parser.hpp>
-#include <ZipLib/streams/memstream.h>
+#include <filesystem>
 #include <ZipLib/ZipArchive.h>
 #include <ZipLib/ZipFile.h>
 #include "ConfigReader.hpp"
+#include "TextTools.hpp"
 
 ConfigReader::ConfigReader(const std::vector<std::string>* const args):
 	args(args)
@@ -19,15 +20,15 @@ ConfigReader::ConfigReader(const std::vector<std::string>* const args):
 boost::property_tree::ptree ConfigReader::parseLauncherCfg()
 {
 	boost::property_tree::ptree tree;
-	std::istream* ms = getLauncherCfg();
-	boost::property_tree::ini_parser::read_ini(*ms, tree);
+	auto ss = getLauncherCfg();
+	boost::property_tree::ini_parser::read_ini(ss, tree);
 	return tree;
 }
 
-std::istream* ConfigReader::getLauncherCfg()
+std::stringstream ConfigReader::getLauncherCfg()
 {
-	ZipArchive::Ptr jar = ZipFile::Open(jarFilename);
-	auto cfgFile = jar->GetEntry(ConfigReader::LAUNCHER_CFG_FILE);
+	ZipArchive::Ptr jarArhive = ZipFile::Open(jarFilename);
+	auto cfgFile = jarArhive->GetEntry(ConfigReader::LAUNCHER_CFG_FILE);
 	if (cfgFile == nullptr)
 	{
 		using namespace std;
@@ -35,7 +36,9 @@ std::istream* ConfigReader::getLauncherCfg()
 			+ jarFilename };
 	}
 
-	return cfgFile->GetDecompressionStream();
+	std::stringstream ss;
+	ss << cfgFile->GetDecompressionStream()->rdbuf();
+	return ss;
 }
 
 std::string ConfigReader::getAppname() const
