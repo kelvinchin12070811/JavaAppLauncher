@@ -44,7 +44,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR cmdline
 	catch (std::exception& e)
 	{
 		MessageBeep(MB_ICONERROR);
-		MessageBox(nullptr, text_tools::stows(e.what()).c_str(), L"No", MB_ICONERROR);
+		MessageBox(nullptr, text_tools::stows(e.what()).c_str(),
+			text_tools::stows(reader ? reader->getAppname() : ConfigReader::DEF_APP_NAME).c_str(),
+			MB_ICONERROR);
 	}
 	return 0;
 }
