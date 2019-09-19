@@ -341,7 +341,4 @@ healthchecksdb
 
 *.props
 
-# ZipLib, static linked stl & addd wstring version
-ZipLib
-
 *.jar
