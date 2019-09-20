@@ -54,8 +54,8 @@ ZipArchive::Ptr ZipArchive::Create(std::istream* stream, bool takeOwnership)
   // jesus blew up a school bus when this metod has been implemented
   if (stream != nullptr)
   {
-    result->ReadEndOfCentralDirectory();
-    result->EnsureCentralDirectoryRead();
+	result->ReadEndOfCentralDirectory();
+	result->EnsureCentralDirectoryRead();
   }
 
   return result;
@@ -93,10 +93,10 @@ ZipArchiveEntry::Ptr ZipArchive::CreateEntry(const std::string& fileName)
 
   if (this->GetEntry(fileName) == nullptr)
   {
-    if ((result = ZipArchiveEntry::CreateNew(this, fileName)) != nullptr)
-    {
-      _entries.push_back(result);
-    }
+	if ((result = ZipArchiveEntry::CreateNew(this, fileName)) != nullptr)
+	{
+	  _entries.push_back(result);
+	}
   }
 
   return result;
@@ -123,7 +123,7 @@ ZipArchiveEntry::Ptr ZipArchive::GetEntry(const std::string& entryName)
 
   if (it != _entries.end())
   {
-    return *it;
+	return *it;
   }
 
   return nullptr;
@@ -140,7 +140,7 @@ void ZipArchive::RemoveEntry(const std::string& entryName)
 
   if (it != _entries.end())
   {
-    _entries.erase(it);
+	_entries.erase(it);
   }
 }
 
@@ -153,19 +153,21 @@ bool ZipArchive::EnsureCentralDirectoryRead()
 {
   detail::ZipCentralDirectoryFileHeader zipCentralDirectoryFileHeader;
 
-  _zipStream->seekg(_endOfCentralDirectoryBlock.OffsetOfStartOfCentralDirectoryWithRespectToTheStartingDiskNumber, std::ios::beg);
+  _zipStream->seekg(_endOfCentralDirectoryBlock.OffsetOfStartOfCentralDirectoryWithRespectToTheStartingDiskNumber + bytesShifted
+	  , std::ios::beg);
 
   while (zipCentralDirectoryFileHeader.Deserialize(*_zipStream))
   {
-    ZipArchiveEntry::Ptr newEntry;
+	zipCentralDirectoryFileHeader.RelativeOffsetOfLocalHeader += bytesShifted;
+	ZipArchiveEntry::Ptr newEntry;
 
-    if ((newEntry = ZipArchiveEntry::CreateExisting(this, zipCentralDirectoryFileHeader)) != nullptr)
-    {
-      _entries.push_back(newEntry);
-    }
+	if ((newEntry = ZipArchiveEntry::CreateExisting(this, zipCentralDirectoryFileHeader)) != nullptr)
+	{
+	  _entries.push_back(newEntry);
+	}
 
-    // ensure clearing of the CDFH struct
-    zipCentralDirectoryFileHeader = detail::ZipCentralDirectoryFileHeader();
+	// ensure clearing of the CDFH struct
+	zipCentralDirectoryFileHeader = detail::ZipCentralDirectoryFileHeader();
   }
 
   return true;
@@ -186,11 +188,9 @@ bool ZipArchive::ReadEndOfCentralDirectory()
 	_endOfCentralDirectoryBlock.Deserialize(*_zipStream);
 	
 	size_t posCdir = posEcdir - _endOfCentralDirectoryBlock.SizeOfCentralDirectory;
-	size_t shifted = posCdir - _endOfCentralDirectoryBlock.OffsetOfStartOfCentralDirectoryWithRespectToTheStartingDiskNumber;
-	_endOfCentralDirectoryBlock.OffsetOfStartOfCentralDirectoryWithRespectToTheStartingDiskNumber += shifted;
-	
+	bytesShifted = posCdir - _endOfCentralDirectoryBlock.OffsetOfStartOfCentralDirectoryWithRespectToTheStartingDiskNumber;
 
-    return true;
+	return true;
   }
 
   return false;
@@ -204,16 +204,16 @@ bool ZipArchive::SeekToSignature(uint32_t signature, SeekDirection direction)
 
   while (!_zipStream->eof() && !_zipStream->fail())
   {
-    deserialize(*_zipStream, buffer);
+	deserialize(*_zipStream, buffer);
 
-    if (buffer == signature)
-    {
-      _zipStream->seekg(streamPosition, std::ios::beg);
-      return true;
-    }
+	if (buffer == signature)
+	{
+	  _zipStream->seekg(streamPosition, std::ios::beg);
+	  return true;
+	}
 
-    streamPosition += appendix;
-    _zipStream->seekg(streamPosition, std::ios::beg);
+	streamPosition += appendix;
+	_zipStream->seekg(streamPosition, std::ios::beg);
   }
 
   return false;
@@ -225,13 +225,13 @@ void ZipArchive::WriteToStream(std::ostream& stream)
 
   for (auto& entry : _entries)
   {
-    entry->SerializeLocalFileHeader(stream);
+	entry->SerializeLocalFileHeader(stream);
   }
 
   auto offsetOfStartOfCDFH = stream.tellp() - startPosition;
   for (auto& entry : _entries)
   {
-    entry->SerializeCentralDirectoryFileHeader(stream);
+	entry->SerializeCentralDirectoryFileHeader(stream);
   }
 
   _endOfCentralDirectoryBlock.NumberOfThisDisk = 0;
@@ -260,7 +260,7 @@ void ZipArchive::InternalDestroy()
 {
   if (_owningStream && _zipStream != nullptr) 
   {
-    delete _zipStream;
-    _zipStream = nullptr;
+	delete _zipStream;
+	_zipStream = nullptr;
   }
 }
