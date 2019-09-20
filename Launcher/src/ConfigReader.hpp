@@ -23,7 +23,9 @@ private:
 	std::stringstream getLauncherCfg();
 
 public:// Accessors
+	std::string getAppArgs() const;
 	std::string getAppname() const;
+	std::string getAppVersion() const;
 	std::string getMaxJvmVersion() const;
 	std::string getMinJvmversion() const;
 	std::string getJarFilename() const;
@@ -32,7 +34,9 @@ public:// Accessors
 	std::string getJvmPath() const;
 
 private: // Attributes
+	std::string appArgs;
 	std::string appname;
+	std::string appVersion;
 	std::string maxJvmVersion;
 	std::string minJvmVersion;
 	std::string jarFilename;

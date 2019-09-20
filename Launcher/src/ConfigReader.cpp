@@ -11,7 +11,7 @@
 #include "ConfigReader.hpp"
 #include "TextTools.hpp"
 
-ConfigReader::ConfigReader(const std::vector<std::string>* const args):
+ConfigReader::ConfigReader(const std::vector<std::string>* const args) :
 	args(args)
 {
 	std::filesystem::path exeFile{ (*args)[0] };
@@ -25,7 +25,14 @@ ConfigReader::ConfigReader(const std::vector<std::string>* const args):
 	}
 
 	auto launcherCfg = parseLauncherCfg();
-	MessageBox(nullptr, text_tools::stows(launcherCfg.get<std::string>("app.name")).c_str(), L"NO", MB_ICONINFORMATION);
+	appArgs = launcherCfg.get<std::string>("app.args", "");
+	appname = launcherCfg.get<std::string>("app.name", "");
+	appVersion = launcherCfg.get<std::string>("app.ver", "");
+	maxJvmVersion = launcherCfg.get<std::string>("jvm.min_ver", "");
+	minJvmVersion = launcherCfg.get<std::string>("jvm.max_ver", "");
+	jvmArgs = launcherCfg.get<std::string>("jvm.args", "");
+	jvmDlPath = launcherCfg.get<std::string>("jvm.dl_path", "");
+	jvmPath = launcherCfg.get<std::string>("jvm.path", "");
 }
 
 boost::property_tree::ptree ConfigReader::parseLauncherCfg()
@@ -58,9 +65,19 @@ std::stringstream ConfigReader::getLauncherCfg()
 	return ss;
 }
 
+std::string ConfigReader::getAppArgs() const
+{
+	return appArgs;
+}
+
 std::string ConfigReader::getAppname() const
 {
 	return appname.empty() ? DEF_APP_NAME : appname;
+}
+
+std::string ConfigReader::getAppVersion() const
+{
+	return appVersion;
 }
 
 std::string ConfigReader::getMaxJvmVersion() const
