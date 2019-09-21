@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <vector>
 #include "ConfigReader.hpp"
+#include "JvmVersionSelector.hpp"
 #include "TextTools.hpp"
 
 std::vector<std::string> parseCmdLine(LPWSTR cmdLine)
@@ -40,6 +41,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR cmdline
 	try
 	{
 		reader = std::make_unique<ConfigReader>(&args);
+		JvmVersionSelector versionSelector{ reader->getMinJvmversion(), reader->getMaxJvmVersion() };
 	}
 	catch (std::exception& e)
 	{

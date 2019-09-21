@@ -24,12 +24,18 @@
     <ClCompile Include="src\ConfigReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\JvmVersionSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\TextTools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ConfigReader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JvmVersionSelector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

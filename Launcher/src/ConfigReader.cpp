@@ -28,8 +28,8 @@ ConfigReader::ConfigReader(const std::vector<std::string>* const args) :
 	appArgs = launcherCfg.get<std::string>("app.args", "");
 	appname = launcherCfg.get<std::string>("app.name", "");
 	appVersion = launcherCfg.get<std::string>("app.ver", "");
-	maxJvmVersion = launcherCfg.get<std::string>("jvm.min_ver", "");
-	minJvmVersion = launcherCfg.get<std::string>("jvm.max_ver", "");
+	maxJvmVersion = launcherCfg.get<std::string>("jvm.man_ver", "");
+	minJvmVersion = launcherCfg.get<std::string>("jvm.min_ver", "");
 	jvmArgs = launcherCfg.get<std::string>("jvm.args", "");
 	jvmDlPath = launcherCfg.get<std::string>("jvm.dl_path", "");
 	jvmPath = launcherCfg.get<std::string>("jvm.path", "");
