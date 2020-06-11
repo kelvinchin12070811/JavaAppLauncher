@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Kelvin Chin</Authors>
+    <Company>Kelvin's Application Laboratory</Company>
+    <Product>Kelvin's Java App Launcher</Product>
+    <Description>A simple application launcher for java which designed to run with system default JVM (default in path variable)</Description>
+    <Copyright>Project is licensed under The Mozilla Public License (MPL) 2.0</Copyright>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/kelvinchin12070811/JavaAppLauncher</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
