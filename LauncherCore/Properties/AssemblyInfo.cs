@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LauncherCore")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Core library for Kelvin's Java App Launcher")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LauncherCore")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("Kelvin's Application Laboratory")]
+[assembly: AssemblyProduct("Kelvin's Java App Launcher")]
+[assembly: AssemblyCopyright("Licensed Under MPL 2.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
