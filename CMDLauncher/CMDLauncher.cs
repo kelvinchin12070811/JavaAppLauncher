@@ -41,6 +41,7 @@ namespace CMDLauncher
 
             string value = (string)key.OpenSubKey("JDK\\11.0.4.11").GetValue("JavaHome");
             Console.WriteLine(value);
+            Console.ReadKey();
         }
     }
 }
