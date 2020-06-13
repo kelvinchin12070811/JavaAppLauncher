@@ -1,5 +1,4 @@
-﻿using LauncherCore.src;
-using System;
+﻿using System;
 
 namespace LauncherCore
 {
@@ -16,6 +15,7 @@ namespace LauncherCore
             if (jvmInfo.Exist)
             {
                 Console.WriteLine(jvmInfo.Version);
+                Console.WriteLine(jvmInfo.Path);
             }
         }
     }

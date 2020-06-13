@@ -39,8 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\JVMVersionHandler.cs" />
-    <Compile Include="src\Launcher.cs" />
+    <Compile Include="JVMInfo.cs" />
+    <Compile Include="JVMVersion.cs" />
+    <Compile Include="JVMVersionHandler.cs" />
+    <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

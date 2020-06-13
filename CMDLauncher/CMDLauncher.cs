@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using System.Diagnostics;
 using LauncherCore;
 using Microsoft.Win32;
 
@@ -41,7 +40,9 @@ namespace CMDLauncher
 
             string value = (string)key.OpenSubKey("JDK\\11.0.4.11").GetValue("JavaHome");
             Console.WriteLine(value);
+#if DEBUG
             Console.ReadKey();
+#endif
         }
     }
 }
