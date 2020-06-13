@@ -12,7 +12,11 @@ namespace LauncherCore
         public void Launch(LaunchType launchType)
         {
             JVMVersionHandler verHandler = new JVMVersionHandler(null, null);
-            Console.WriteLine(verHandler.getDefaultJVMVersion());
+            var jvmInfo = verHandler.getDefaultJVM();
+            if (jvmInfo.Exist)
+            {
+                Console.WriteLine(jvmInfo.Version);
+            }
         }
     }
 }

@@ -13,6 +13,25 @@ namespace LauncherCore.src
     class JVMVersionHandler
     {
         /// <summary>
+        /// Information about the JVM.
+        /// </summary>
+        public class JVMInfo
+        {
+            /// <summary>
+            /// Determine if the JVM exist on client.
+            /// </summary>
+            public bool Exist = false;
+            /// <summary>
+            /// Determine the path of the JVM's JavaHome path.
+            /// </summary>
+            public string Path = null;
+            /// <summary>
+            /// Determine the version of the JVM, formated in x.y.z even with java 8 or bellow.
+            /// </summary>
+            public string Version = null;
+        }
+
+        /// <summary>
         /// Minimum JVM version required to execute the program.
         /// </summary>
         private string minJVMVersion = null;
@@ -33,11 +52,12 @@ namespace LauncherCore.src
         }
 
         /// <summary>
-        /// Find the default JVM's version located on the client.
+        /// Find the default JVM located on the client.
         /// </summary>
-        /// <returns>Version of the default JVM or null if no default JVM found.</returns>
-        public string getDefaultJVMVersion()
+        /// <returns>JVMInfo about the default JVM in client's path.</returns>
+        public JVMInfo getDefaultJVM()
         {
+            JVMInfo defaultJVM = new JVMInfo();
             Process defJVM = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -55,10 +75,34 @@ namespace LauncherCore.src
 
             Regex verMatcher = new Regex("version \"(.+)\"");
             Match result = verMatcher.Match(output);
+
             if (result.Success)
-                return result.Groups[1].Value;
-            else
-                return null;
+            {
+                defaultJVM.Exist = true;
+                defaultJVM.Path = "java";
+                defaultJVM.Version = VersionParser(result.Groups[1].Value);
+            }
+
+            return defaultJVM;
+        }
+
+        /// <summary>
+        /// Parse JVM version to latest syntax with tech spec.
+        /// </summary>
+        /// <param name="version">Version number to parse</param>
+        /// <returns>Version number in format of "major.minor.update"</returns>
+        private string VersionParser(string version)
+        {
+            string formatedVersion = version;
+            var java8VersionFormat = new Regex("^1\\.(\\d+)\\.(\\d+)_(\\d+)");
+            var matchResult = java8VersionFormat.Match(version);
+            var matchGroups = matchResult.Groups;
+
+            if (matchResult.Success)
+                formatedVersion = string.Format("{0}.{1}.{2}",
+                    matchGroups[1], matchGroups[2], matchGroups[3]);
+
+            return formatedVersion;
         }
     }
 }
