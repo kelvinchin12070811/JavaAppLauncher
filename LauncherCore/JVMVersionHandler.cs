@@ -61,7 +61,7 @@ namespace LauncherCore
             {
                 defaultJVM.Exist = true;
                 defaultJVM.Path = "";
-                defaultJVM.Version = new JVMVesion(result.Groups[1].Value);
+                defaultJVM.Version = new JVMVersion(result.Groups[1].Value);
             }
 
             return defaultJVM;

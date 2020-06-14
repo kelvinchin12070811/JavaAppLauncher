@@ -21,6 +21,6 @@ namespace LauncherCore
         /// <summary>
         /// Determine the version of the JVM, formated in x.y.z even with java 8 or bellow.
         /// </summary>
-        public JVMVesion Version = null;
+        public JVMVersion Version = null;
     }
 }

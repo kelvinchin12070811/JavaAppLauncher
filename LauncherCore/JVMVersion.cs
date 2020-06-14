@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LauncherCore
 {
@@ -10,7 +8,7 @@ namespace LauncherCore
     /// See official documentation of Version-String for detailed reference.
     /// https://docs.oracle.com/javase/10/install/version-string-format.htm#JSJIG-GUID-DCA60310-6565-4BB6-8D24-6FF07C1C4B4E
     /// </summary>
-    public class JVMVesion
+    public class JVMVersion
     {
         public int Feature { get; private set; } = 0;
         public int Interim { get; private set; } = 0;
@@ -24,7 +22,7 @@ namespace LauncherCore
         /// <param name="interim">Interim section of JVM Version.</param>
         /// <param name="update">Update section of JVM Version.</param>
         /// <param name="patch">Patch section of JVM Version.</param>
-        public JVMVesion(int feature = 0, int interim = 0, int update = 0, int patch = 0)
+        public JVMVersion(int feature = 0, int interim = 0, int update = 0, int patch = 0)
         {
             Feature = feature;
             Interim = interim;
@@ -36,7 +34,7 @@ namespace LauncherCore
         /// Create JVMVersion from Version-String.
         /// </summary>
         /// <param name="version">Version-String.</param>
-        public JVMVesion(string version)
+        public JVMVersion(string version)
         {
             VersionParser(version);
         }
@@ -73,6 +71,58 @@ namespace LauncherCore
                 if (matchGroups[5].Value != "")
                     Patch = int.Parse(matchGroups[5].Value);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            JVMVersion rhs = (JVMVersion)obj;
+            return (Feature == rhs.Feature) && (Interim == rhs.Interim) &&
+                (Update == rhs.Update) && (Patch == rhs.Patch);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 24224089;
+            hashCode = hashCode * -1521134295 + Feature.GetHashCode();
+            hashCode = hashCode * -1521134295 + Interim.GetHashCode();
+            hashCode = hashCode * -1521134295 + Update.GetHashCode();
+            hashCode = hashCode * -1521134295 + Patch.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator==(JVMVersion lhs, JVMVersion rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator!=(JVMVersion lhs, JVMVersion rhs)
+        {
+            return !lhs.Equals(rhs);
+        }
+
+        public static bool operator<(JVMVersion lhs, JVMVersion rhs)
+        {
+            if (lhs.Feature >= rhs.Feature) return false;
+            else if (lhs.Interim >= rhs.Interim) return false;
+            else if (lhs.Update >= rhs.Update) return false;
+            else if (lhs.Patch >= rhs.Patch) return false;
+
+            return true;
+        }
+
+        public static bool operator>(JVMVersion lhs, JVMVersion rhs)
+        {
+            return !(lhs < rhs) && (lhs != rhs);
+        }
+
+        public static bool operator<=(JVMVersion lhs, JVMVersion rhs)
+        {
+            return !(lhs > rhs);
+        }
+
+        public static bool operator >=(JVMVersion lhs, JVMVersion rhs)
+        {
+            return !(lhs < rhs);
         }
     }
 }
