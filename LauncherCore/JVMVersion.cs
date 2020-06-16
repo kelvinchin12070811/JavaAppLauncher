@@ -120,7 +120,7 @@ namespace LauncherCore
                     }
                     else if (lhs.Update == rhs.Update)
                     {
-                        if (lhs.Patch > rhs.Patch)
+                        if (lhs.Patch >= rhs.Patch)
                             return false;
                     }
                 }

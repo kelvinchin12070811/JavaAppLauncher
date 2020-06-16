@@ -18,9 +18,16 @@ namespace UnitTest
             testResult.Add("JVM version not equal", minVer != maxVer);
             testResult.Add("JVM version less than", minVer < maxVer);
             testResult.Add("JVM version less than(false)", !(maxVer < minVer));
+            testResult.Add("JVM version less than(equal, false)", !(minVer < minVer));
             testResult.Add("JVM version less than & equal, less", minVer <= maxVer);
             testResult.Add("JVM version less than & equal, equal", maxVer <= maxVer);
-            testResult.Add("JVM version less than & equal, equal(false)", !(maxVer <= minVer));
+            testResult.Add("JVM version less than & equal, false", !(maxVer <= minVer));
+            testResult.Add("JVM version greather than", maxVer > minVer);
+            testResult.Add("JVM version greather than(false)", !(minVer > maxVer));
+            testResult.Add("JVM version greather than(equal)", !(maxVer > maxVer));
+            testResult.Add("JVM version greather than & equal, larger", maxVer >= minVer);
+            testResult.Add("JVM version greather than & equal, equal", maxVer >= maxVer);
+            testResult.Add("JVM version greather than & equal, false", !(minVer >= maxVer));
 #pragma warning restore CS1718 // Comparison made to same variable
         }
 
@@ -33,13 +40,16 @@ namespace UnitTest
             int passed = 0;
             foreach (var result in testResult)
             {
-                Console.WriteLine("{0}: {1}", result.Key, result.Value);
+                if (result.Value == false)
+                    Console.Write("->");
+
+                Console.WriteLine($"{result.Key}: {(result.Value ? "Passed" : "Failed")}");
                 if (result.Value == true) passed++;
             }
 
-            Console.WriteLine("\n\nTotal test: {0}", testResult.Count);
-            Console.WriteLine("Passed test: {0}", passed);
-            Console.WriteLine("Failed test: {0}", testResult.Count - passed);
+            Console.WriteLine($"\n\nTotal test: {testResult.Count}");
+            Console.WriteLine($"Passed test: {passed}");
+            Console.WriteLine($"Failed test: {testResult.Count - passed}");
 
             Console.ReadKey();
         }
