@@ -102,10 +102,29 @@ namespace LauncherCore
 
         public static bool operator<(JVMVersion lhs, JVMVersion rhs)
         {
-            if (lhs.Feature >= rhs.Feature) return false;
-            else if (lhs.Interim >= rhs.Interim) return false;
-            else if (lhs.Update >= rhs.Update) return false;
-            else if (lhs.Patch >= rhs.Patch) return false;
+            if (lhs.Feature > rhs.Feature)
+            {
+                return false;
+            }
+            else if (lhs.Feature == rhs.Feature)
+            {
+                if (lhs.Interim > rhs.Interim)
+                {
+                    return false;
+                }
+                else if (lhs.Interim == rhs.Interim)
+                {
+                    if (lhs.Update > rhs.Update)
+                    {
+                        return false;
+                    }
+                    else if (lhs.Update == rhs.Update)
+                    {
+                        if (lhs.Patch > rhs.Patch)
+                            return false;
+                    }
+                }
+            }
 
             return true;
         }
