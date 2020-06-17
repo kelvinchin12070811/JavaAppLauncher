@@ -17,6 +17,12 @@ namespace LauncherCore
                 Console.WriteLine(jvmInfo.Version);
                 Console.WriteLine(jvmInfo.Path);
             }
+
+            var jvms = verHandler.GetAllRegisteredJVM();
+            foreach (JVMInfo info in jvms)
+            {
+                Console.WriteLine($"{info.Path}: {info.Version}");
+            }
         }
     }
 }

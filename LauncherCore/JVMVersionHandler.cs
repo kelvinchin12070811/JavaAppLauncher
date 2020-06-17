@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LauncherCore
@@ -65,6 +64,46 @@ namespace LauncherCore
             }
 
             return defaultJVM;
+        }
+
+        /// <summary>
+        /// Get a list of JVMs which registered in registry.
+        /// </summary>
+        /// <returns>List of JVM avaliable.</returns>
+        public List<JVMInfo> GetAllRegisteredJVM()
+        {
+            var jvms = new List<JVMInfo>();
+
+            var hkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\JavaSoft");
+            string[] keys = hkey.GetSubKeyNames();
+            var jvmLists = new Regex("(JDK)|(JRE)|(Java Runtime Environment)|Java Development Kit");
+
+            foreach (string key in keys)
+            {
+                if (!jvmLists.Match(key).Success) continue;
+                var registeredJVMs = hkey.OpenSubKey(key);
+                
+                foreach (string jvm in registeredJVMs.GetSubKeyNames())
+                {
+                    var info = new JVMInfo();
+                    info.Path = (string)registeredJVMs.OpenSubKey(jvm).GetValue("JavaHome");
+                    info.Version = new JVMVersion(jvm);
+
+                    if (info.Version == new JVMVersion(0, 0, 0, 0))
+                        continue;
+
+                    jvms.Add(info);
+                }
+            }
+
+            jvms.Sort(delegate(JVMInfo lhs, JVMInfo rhs)
+            {
+                if (lhs.Version > rhs.Version) return 1;
+                else if (lhs.Version < rhs.Version) return -1;
+                else return 0;
+            });
+
+            return jvms;
         }
     }
 }
