@@ -76,7 +76,7 @@ namespace LauncherCore
 
             var hkey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\JavaSoft");
             string[] keys = hkey.GetSubKeyNames();
-            var jvmLists = new Regex("(JDK)|(JRE)|(Java Runtime Environment)|Java Development Kit");
+            var jvmLists = new Regex("(JDK)|(JRE)|(Java Runtime Environment)|(Java Development Kit)");
 
             foreach (string key in keys)
             {

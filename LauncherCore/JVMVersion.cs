@@ -70,7 +70,14 @@ namespace LauncherCore
                 Update = int.Parse(matchGroups[3].Value);
                 if (matchGroups[5].Value != "")
                     Patch = int.Parse(matchGroups[5].Value);
+                return;
             }
+
+            var splited = version.Split('.');
+            if (splited.Length != 1)
+                Feature = int.Parse(splited[1]);
+            else
+                Feature = int.Parse(splited[0]);
         }
 
         public override bool Equals(object obj)
