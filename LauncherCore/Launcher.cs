@@ -23,6 +23,8 @@ namespace LauncherCore
             {
                 Console.WriteLine($"{info.Path}: {info.Version}");
             }
+
+            ConfigReader reader = new ConfigReader();
         }
     }
 }

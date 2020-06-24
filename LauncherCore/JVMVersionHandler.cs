@@ -82,12 +82,15 @@ namespace LauncherCore
             {
                 if (!jvmLists.Match(key).Success) continue;
                 var registeredJVMs = hkey.OpenSubKey(key);
-                
+
                 foreach (string jvm in registeredJVMs.GetSubKeyNames())
                 {
-                    var info = new JVMInfo();
-                    info.Path = (string)registeredJVMs.OpenSubKey(jvm).GetValue("JavaHome");
-                    info.Version = new JVMVersion(jvm);
+                    var info = new JVMInfo()
+                    {
+                        Exist = true,
+                        Path = (string)registeredJVMs.OpenSubKey(jvm).GetValue("JavaHome"),
+                        Version = new JVMVersion(jvm)
+                    };
 
                     if (info.Version == new JVMVersion(0, 0, 0, 0))
                         continue;

@@ -53,6 +53,8 @@ namespace LauncherCore
         /// <param name="version">Version number to parse</param>
         private void VersionParser(string version)
         {
+            if (version == string.Empty) return;
+
             var java8VersionFormat = new Regex("^1\\.(\\d+)\\.(\\d+)_(\\d+)");
             var matchResult = java8VersionFormat.Match(version);
 
@@ -82,6 +84,7 @@ namespace LauncherCore
 
         public override bool Equals(object obj)
         {
+            if (obj == null) return false;
             JVMVersion rhs = (JVMVersion)obj;
             return (Feature == rhs.Feature) && (Interim == rhs.Interim) &&
                 (Update == rhs.Update) && (Patch == rhs.Patch);
@@ -99,7 +102,10 @@ namespace LauncherCore
 
         public static bool operator==(JVMVersion lhs, JVMVersion rhs)
         {
-            return lhs.Equals(rhs);
+            if (Equals(lhs, null))
+                return Equals(rhs, null) ? true : false;
+            else
+                return lhs.Equals(rhs);
         }
 
         public static bool operator!=(JVMVersion lhs, JVMVersion rhs)
