@@ -47,6 +47,7 @@
     <Compile Include="JVMVersion.cs" />
     <Compile Include="JVMVersionHandler.cs" />
     <Compile Include="Launcher.cs" />
+    <Compile Include="LauncherConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

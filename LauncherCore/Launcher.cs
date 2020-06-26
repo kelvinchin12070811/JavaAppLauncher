@@ -2,9 +2,24 @@
 
 namespace LauncherCore
 {
+    /// <summary>
+    /// Main entry point of JavaAppLauncher.
+    /// </summary>
     public class Launcher
     {
-        public enum LaunchType { console, window };
+        /// <summary>
+        /// Type of application.
+        /// </summary>
+        public enum LaunchType {
+            /// <summary>
+            /// Console application.
+            /// </summary>
+            console,
+            /// <summary>
+            /// Windowed application
+            /// </summary>
+            window
+        };
 
         public const string VERSION = "1.0";
 
