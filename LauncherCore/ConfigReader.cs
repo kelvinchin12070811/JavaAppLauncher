@@ -5,9 +5,6 @@ using System.IO;
 
 namespace LauncherCore
 {
-    /// <summary>
-    /// Object that read the configuration file of the launcher.
-    /// </summary>
     class ConfigReader
     {
         public LauncherConfig Config { get; private set; } = null;
@@ -19,9 +16,9 @@ namespace LauncherCore
             var decerealEngine = new Deserializer();
             Config = decerealEngine.Deserialize<LauncherConfig>(cfgFile);
 
-            Console.WriteLine(Config.Config.Version.Min);
-            Console.WriteLine(Config.Config.Version.Max == null);
-            Console.WriteLine(Config.Config.SearchPath.CommandLineDefault);
+            Console.WriteLine(Config.Launcher.Version.Min);
+            Console.WriteLine(Config.Launcher.Version.Max == null);
+            Console.WriteLine(Config.Launcher.SearchPath.CommandLineDefault);
         }
     }
 }

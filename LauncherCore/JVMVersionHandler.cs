@@ -6,35 +6,17 @@ using System.Text.RegularExpressions;
 
 namespace LauncherCore
 {
-    /// <summary>
-    /// Class that use to find avaliable jvms on client.
-    /// </summary>
     class JVMVersionHandler
     {
-        /// <summary>
-        /// Minimum JVM version required to execute the program.
-        /// </summary>
         private string minJVMVersion = null;
-        /// <summary>
-        /// Maximum JVM version required to execute the program.
-        /// </summary>
         private string maxJVMVersion = null;
 
-        /// <summary>
-        /// Create new instance of JVMVersionHandler.
-        /// </summary>
-        /// <param name="minJVMVersion">Minimum JVM Version required, null to ignore min version checking</param>
-        /// <param name="maxJVMVersion">Maximum JVM Version required, null to ignore max version checking</param>
         public JVMVersionHandler(string minJVMVersion, string maxJVMVersion)
         {
             this.minJVMVersion = minJVMVersion;
             this.maxJVMVersion = maxJVMVersion;
         }
 
-        /// <summary>
-        /// Find the default JVM located on the client.
-        /// </summary>
-        /// <returns>JVMInfo about the default JVM in client's path.</returns>
         public JVMInfo getDefaultJVM()
         {
             JVMInfo defaultJVM = new JVMInfo();
@@ -66,10 +48,6 @@ namespace LauncherCore
             return defaultJVM;
         }
 
-        /// <summary>
-        /// Get a list of JVMs which registered in registry.
-        /// </summary>
-        /// <returns>List of JVM avaliable.</returns>
         public List<JVMInfo> GetAllRegisteredJVM()
         {
             var jvms = new List<JVMInfo>();

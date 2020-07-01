@@ -2,22 +2,10 @@
 
 namespace LauncherCore
 {
-    /// <summary>
-    /// Main entry point of JavaAppLauncher.
-    /// </summary>
     public class Launcher
     {
-        /// <summary>
-        /// Type of application.
-        /// </summary>
         public enum LaunchType {
-            /// <summary>
-            /// Console application.
-            /// </summary>
             console,
-            /// <summary>
-            /// Windowed application
-            /// </summary>
             window
         };
 
