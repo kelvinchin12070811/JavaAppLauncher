@@ -1,6 +1,6 @@
 ﻿using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace LauncherCore
@@ -13,12 +13,11 @@ namespace LauncherCore
             var path = "./io.gitlab.kelvinchin12070811/javaapplauncher/launcher.config.yaml";
             var cfgFile = new StreamReader(File.OpenRead(path));
 
-            var decerealEngine = new Deserializer();
+            var decerealEngine = new DeserializerBuilder().Build();
             Config = decerealEngine.Deserialize<LauncherConfig>(cfgFile);
 
-            Console.WriteLine(Config.Launcher.Version.Min);
-            Console.WriteLine(Config.Launcher.Version.Max == null);
-            Console.WriteLine(Config.Launcher.SearchPath.CommandLineDefault);
+            Console.WriteLine(Config.JVM.StartupCMD);
+            Console.WriteLine(Config.App.DefaultArgs);
         }
     }
 }
