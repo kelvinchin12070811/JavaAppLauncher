@@ -26,13 +26,12 @@ namespace LauncherCore
                 Console.WriteLine(jvmInfo.Path);
             }
 
-            var jvms = verHandler.GetAllRegisteredJVM();
-            foreach (JVMInfo info in jvms)
-            {
-                Console.WriteLine($"{info.Path}: {info.Version}");
-            }
-
             ConfigReader reader = new ConfigReader();
+            JVMInfo selectedJVM = verHandler.GetPrefferedJVM(reader.Config.Launcher);
+            if (selectedJVM == null)
+                Console.WriteLine("no prefered jvm found");
+            else
+                Console.WriteLine(string.Format("selected jvm: {0}", selectedJVM.Path));
         }
     }
 }

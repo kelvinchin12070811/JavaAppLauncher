@@ -6,6 +6,8 @@
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace LauncherCore
@@ -89,6 +91,43 @@ namespace LauncherCore
             });
 
             return jvms;
+        }
+
+        public JVMInfo GetPrefferedJVM(CoreConfig coreConfig)
+        {
+            if (coreConfig.BundledJVM)
+            {
+                string pwd = Assembly.GetExecutingAssembly().Location;
+                pwd = Path.GetDirectoryName(pwd);
+                var bundledJVM = new JVMInfo();
+                bundledJVM.Exist = true;
+                bundledJVM.Path = string.Format("{0}\\runtime",
+                    pwd);
+                bundledJVM.Version = JVMVersion.EMPTY;
+                return bundledJVM;
+            }
+
+            if (coreConfig.SearchPath.Registry)
+            {
+                List<JVMInfo> registeredJVMs = GetAllRegisteredJVM();
+                registeredJVMs.Reverse();
+
+                if (coreConfig.Version.Min == null)
+                    return registeredJVMs[0];
+
+                foreach (var jvm in registeredJVMs)
+                {
+                    if (jvm.Version >= coreConfig.Version.Min)
+                    {
+                        if (coreConfig.Version.Max == null ||
+                            jvm.Version <= coreConfig.Version.Max)
+                        {
+                            return jvm;
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }

@@ -10,9 +10,9 @@ namespace LauncherCore
     public sealed class VersionRange
     {
         [YamlMember(Alias = "min", ApplyNamingConventions = false)]
-        public string Min { get; set; } = "";
+        public JVMVersion Min { get; set; } = JVMVersion.EMPTY;
         [YamlMember(Alias = "max", ApplyNamingConventions = false)]
-        public string Max { get; set; } = "";
+        public JVMVersion Max { get; set; } = JVMVersion.EMPTY;
     }
 
     public sealed class SearchPath

@@ -5,6 +5,7 @@
  ***********************************************************************************************************/
 using YamlDotNet.Serialization;
 using System.IO;
+using System.Reflection;
 
 namespace LauncherCore
 {
@@ -13,7 +14,9 @@ namespace LauncherCore
         public LauncherConfig Config { get; private set; } = null;
         public ConfigReader()
         {
-            var path = "./io.gitlab.kelvinchin12070811/javaapplauncher/launcher.config.yaml";
+            var pwd = Assembly.GetEntryAssembly().Location;
+            pwd = Path.GetDirectoryName(pwd);
+            var path = string.Format("{0}//javaapplauncher.config", pwd);
             var cfgFile = new StreamReader(File.OpenRead(path));
 
             var decerealEngine = new DeserializerBuilder().Build();
