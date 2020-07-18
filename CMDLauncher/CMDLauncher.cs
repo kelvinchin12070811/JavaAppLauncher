@@ -13,10 +13,7 @@ namespace CMDLauncher
         static void Main(string[] args)
         {
             Launcher launcher = new Launcher();
-            launcher.Launch(Launcher.LaunchType.console);
-#if DEBUG
-            Console.ReadKey();
-#endif
+            launcher.Launch(Launcher.LaunchType.console, args);
         }
     }
 }

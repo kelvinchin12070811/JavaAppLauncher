@@ -33,6 +33,8 @@ namespace LauncherCore
         public SearchPath SearchPath { get; set; } = null;
         [YamlMember(Alias = "bundled jvm", ApplyNamingConventions = false)]
         public bool BundledJVM { get; set; } = false;
+        [YamlMember(Alias = "launch file", ApplyNamingConventions = false)]
+        public string LaunchFile { get; set; }
     }
 
     public sealed class JVMConfig
