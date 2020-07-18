@@ -16,9 +16,9 @@ namespace LauncherCore
 
         public const string VERSION = "1.0";
 
-        public void Launch(LaunchType launchType)
+        public void Launch(LaunchType launchType, string[] args = null)
         {
-            JVMVersionHandler verHandler = new JVMVersionHandler(null, null);
+            JVMVersionHandler verHandler = new JVMVersionHandler();
             var jvmInfo = verHandler.getDefaultJVM();
             if (jvmInfo.Exist)
             {
@@ -31,7 +31,7 @@ namespace LauncherCore
             if (selectedJVM == null)
                 Console.WriteLine("no prefered jvm found");
             else
-                Console.WriteLine(string.Format("selected jvm: {0}", selectedJVM.Path));
+                Console.WriteLine($"selected jvm: {selectedJVM.Path}");
         }
     }
 }

@@ -16,11 +16,12 @@ namespace LauncherCore
         {
             var pwd = Assembly.GetEntryAssembly().Location;
             pwd = Path.GetDirectoryName(pwd);
-            var path = string.Format("{0}//javaapplauncher.config", pwd);
+            var path = $"{pwd}//javaapplauncher.cfg";
             var cfgFile = new StreamReader(File.OpenRead(path));
 
             var decerealEngine = new DeserializerBuilder().Build();
             Config = decerealEngine.Deserialize<LauncherConfig>(cfgFile);
+            cfgFile.Close();
         }
     }
 }

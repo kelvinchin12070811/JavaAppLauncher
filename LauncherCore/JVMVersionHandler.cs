@@ -5,8 +5,10 @@
  ***********************************************************************************************************/
 using Microsoft.Win32;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -14,15 +16,6 @@ namespace LauncherCore
 {
     class JVMVersionHandler
     {
-        private string minJVMVersion = null;
-        private string maxJVMVersion = null;
-
-        public JVMVersionHandler(string minJVMVersion, string maxJVMVersion)
-        {
-            this.minJVMVersion = minJVMVersion;
-            this.maxJVMVersion = maxJVMVersion;
-        }
-
         public JVMInfo getDefaultJVM()
         {
             JVMInfo defaultJVM = new JVMInfo();
@@ -99,34 +92,43 @@ namespace LauncherCore
             {
                 string pwd = Assembly.GetExecutingAssembly().Location;
                 pwd = Path.GetDirectoryName(pwd);
-                var bundledJVM = new JVMInfo();
-                bundledJVM.Exist = true;
-                bundledJVM.Path = string.Format("{0}\\runtime",
-                    pwd);
-                bundledJVM.Version = JVMVersion.EMPTY;
+                var bundledJVM = new JVMInfo
+                {
+                    Exist = true,
+                    Path = $"{pwd}\\runtime",
+                    Version = JVMVersion.EMPTY
+                };
                 return bundledJVM;
             }
 
             if (coreConfig.SearchPath.Registry)
             {
                 List<JVMInfo> registeredJVMs = GetAllRegisteredJVM();
-                registeredJVMs.Reverse();
 
-                if (coreConfig.Version.Min == null)
-                    return registeredJVMs[0];
+                if (coreConfig.Version.Min == null || coreConfig.Version.Max == null)
+                    return registeredJVMs.LastOrDefault();
 
-                foreach (var jvm in registeredJVMs)
+                var selectedJvm = from jvm in registeredJVMs
+                                  where jvm.Version >= coreConfig.Version.Min &&
+                                  jvm.Version <= coreConfig.Version.Max
+                                  select jvm;
+
+                foreach (var jvm in selectedJvm)
+                    System.Console.WriteLine($"v{jvm.Version}: {jvm.Path}");
+
+                return selectedJvm.LastOrDefault();
+            }
+
+            if (coreConfig.SearchPath.CmdDefault)
+            {
+                JVMInfo defaultJvm = getDefaultJVM();
+                if (coreConfig.Version.Min == null || defaultJvm.Version >= coreConfig.Version.Min)
                 {
-                    if (jvm.Version >= coreConfig.Version.Min)
-                    {
-                        if (coreConfig.Version.Max == null ||
-                            jvm.Version <= coreConfig.Version.Max)
-                        {
-                            return jvm;
-                        }
-                    }
+                    if (coreConfig.Version.Max == null || coreConfig.Version.Max <= defaultJvm.Version)
+                        return defaultJvm;
                 }
             }
+
             return null;
         }
     }
