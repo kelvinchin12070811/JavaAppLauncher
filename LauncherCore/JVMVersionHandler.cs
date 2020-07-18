@@ -113,9 +113,6 @@ namespace LauncherCore
                                   jvm.Version <= coreConfig.Version.Max
                                   select jvm;
 
-                foreach (var jvm in selectedJvm)
-                    System.Console.WriteLine($"v{jvm.Version}: {jvm.Path}");
-
                 return selectedJvm.LastOrDefault();
             }
 
