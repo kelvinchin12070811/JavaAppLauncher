@@ -11,7 +11,8 @@ namespace LauncherCore
 {
     public class Launcher
     {
-        public enum LaunchType {
+        public enum LaunchType
+        {
             console,
             window
         };
