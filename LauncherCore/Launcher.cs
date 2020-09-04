@@ -50,6 +50,10 @@ namespace LauncherCore
             string jvmPath = $"{selectedJVM.Path}bin\\{jvmExecutable}";
             var argStrBuilder = new StringBuilder();
 
+            argStrBuilder.Append(launcherConfig.App.DefaultArgs);
+
+            if (args.Length != 0) argStrBuilder.Append(' ');
+
             foreach (var arg in args)
                 argStrBuilder.Append($"\"{arg}\" ");
 
