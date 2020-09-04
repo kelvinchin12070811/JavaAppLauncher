@@ -63,7 +63,7 @@ namespace LauncherCore
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = jvmPath,
-                        Arguments = $"-jar {launcherConfig.Launcher.LaunchFile} {argStr}",
+                        Arguments = $"{launcherConfig.JVM.VmArgs} -jar {launcherConfig.Launcher.LaunchFile} {argStr}",
                         UseShellExecute = launchType == LaunchType.window
                     }
                 };
@@ -75,7 +75,7 @@ namespace LauncherCore
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = jvmPath,
-                        Arguments = $"{launcherConfig.Launcher.LaunchFile} {argStr}",
+                        Arguments = $"{launcherConfig.JVM.VmArgs} {launcherConfig.Launcher.LaunchFile} {argStr}",
                         UseShellExecute = launchType == LaunchType.window
                     }
                 };

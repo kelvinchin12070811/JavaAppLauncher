@@ -1,12 +1,13 @@
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import java.util.List;
 
 public class MainFrame extends JFrame
 {
     String[] args = null;
     JTextArea argsList = null;
     
-    public MainFrame(String[] args)
+    public MainFrame(String[] args, List<String> vmArgs)
     {
         this.args = args;
         
@@ -15,6 +16,10 @@ public class MainFrame extends JFrame
         
         for (int i = 0; i < args.length; i++)
             argsList.append(String.format("%s. %s\n", i + 1, args[i]));
+
+        argsList.append("\nArgs passed into JVM:\n");
+        for (int i = 0; i < vmArgs.size(); i++)
+            argsList.append(String.format("%s. %s\n", i + 1, vmArgs.get(i)));
         
         this.argsList = new JTextArea(argsList.toString());
         this.argsList.setEditable(false);
