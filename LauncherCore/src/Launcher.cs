@@ -51,6 +51,7 @@ namespace LauncherCore
   max version:
   args:
   use bundled jvm: false
+  jvm download path:
 app:
   args:
   version:";
@@ -76,6 +77,14 @@ app:
             {
                 throw new FileNotFoundException("Launcher configuration not found.");
             }
+        }
+
+        /// <summary>
+        /// Select JVM and start the application.
+        /// </summary>
+        public void LaunchApplication()
+        {
+
         }
 
         /// <summary>
@@ -144,5 +153,15 @@ app:
                                        from value in (IDictionary<object, object>)section.Value
                                        where (string)value.Key == "args"
                                        select value.Value).FirstOrDefault()?.ToString();
+
+        /// <summary>
+        /// Get specified URL to download JVM for the application.
+        /// </summary>
+        /// <returns>URL to download JVM or null if not specified.</returns>
+        public string GetJVMDlPath() => (from section in (IDictionary<object, object>)configDocument
+                                         where (string)section.Key == "jvm"
+                                         from value in (IDictionary<object, object>)section.Value
+                                         where (string)value.Key == "jvm download path"
+                                         select value.Value).FirstOrDefault()?.ToString();
     }
 }

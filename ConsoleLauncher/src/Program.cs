@@ -14,6 +14,7 @@ namespace ConsoleLauncher
                 Console.WriteLine("max jvm ver: {0}", Launcher.Instance.GetMaximumJVMVersion());
                 Console.WriteLine("jvm args: {0}", Launcher.Instance.GetJVMArgs());
                 Console.WriteLine("use bundled jvm: {0}", Launcher.Instance.IsUsingBundledJVM());
+                Console.WriteLine("jvm download path: {0}", Launcher.Instance.GetJVMDlPath());
 
                 Console.WriteLine("app version: {0}", Launcher.Instance.GetAppVersion());
                 Console.WriteLine("app args: {0}", Launcher.Instance.GetAppArgs());
