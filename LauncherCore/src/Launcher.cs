@@ -32,7 +32,7 @@ namespace LauncherCore
         /// <summary>
         /// Singleton instance of the launcher object.
         /// </summary>
-        public static Launcher Instance { get { return Instance_; } }
+        public static Launcher Instance => Instance_;
         private static readonly Launcher Instance_ = new Launcher();
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LauncherCore
 
         private object configDocument = null;
 
-        private readonly string DefaultDocument = @"jvm:
+        private const string DefaultDocument = @"jvm:
   min version:
   max version:
   args:
@@ -82,44 +82,31 @@ app:
         /// Get minimum JVM version required.
         /// </summary>
         /// <returns>String of JVM version, null if not specified.</returns>
-        public string GetMinimumJVMVersion()
-        {
-            var result = from section in (IDictionary<object, object>)configDocument
-                         where (string)section.Key == "jvm"
-                         from value in (IDictionary<object, object>)section.Value
-                         where (string)value.Key == "min version"
-                         select value.Value;
-
-            return result.First().ToString();
-        }
+        public string GetMinimumJVMVersion() => (from section in (IDictionary<object, object>)configDocument
+                                                 where (string)section.Key == "jvm"
+                                                 from value in (IDictionary<object, object>)section.Value
+                                                 where (string)value.Key == "min version"
+                                                 select value.Value).FirstOrDefault().ToString();
 
         /// <summary>
         /// Get maximum JVM version required.
         /// </summary>
         /// <returns>String of JVM version, null if not specified.</returns>
-        public string GetMaximumJVMVersion()
-        {
-            return (from section in (IDictionary<object, object>)configDocument
-                    where (string)section.Key == "jvm"
-                    from value in (IDictionary<object, object>)section.Value
-                    where (string)value.Key == "max version"
-                    select value.Value).First()?.ToString();
-        }
+        public string GetMaximumJVMVersion() => (from section in (IDictionary<object, object>)configDocument
+                                                 where (string)section.Key == "jvm"
+                                                 from value in (IDictionary<object, object>)section.Value
+                                                 where (string)value.Key == "max version"
+                                                 select value.Value).FirstOrDefault()?.ToString();
 
         /// <summary>
         /// Get Arguments that will be passed into JVM on launch.
         /// </summary>
         /// <returns>Arguments that will be passed into JVM or null if not specified.</returns>
-        public string GetJVMArgs()
-        {
-            var result = from section in (IDictionary<object, object>)configDocument
-                         where (string)section.Key == "jvm"
-                         from value in (IDictionary<object, object>)section.Value
-                         where (string)value.Key == "args"
-                         select value.Value;
-
-            return result.First()?.ToString();
-        }
+        public string GetJVMArgs() => (from section in (IDictionary<object, object>)configDocument
+                                       where (string)section.Key == "jvm"
+                                       from value in (IDictionary<object, object>)section.Value
+                                       where (string)value.Key == "args"
+                                       select value.Value).FirstOrDefault().ToString();
 
         /// <summary>
         /// Determine if should use bundled JVM.
@@ -128,10 +115,10 @@ app:
         public bool IsUsingBundledJVM()
         {
             var result = (from section in (IDictionary<object, object>)configDocument
-                          where (string)section.Key == "jvm"
-                          from value in (IDictionary<object, object>)section.Value
-                          where (string)value.Key == "use bundled jvm"
-                          select value.Value).First();
+                            where (string)section.Key == "jvm"
+                            from value in (IDictionary<object, object>)section.Value
+                            where (string)value.Key == "use bundled jvm"
+                            select value.Value).FirstOrDefault();
 
             if (result == null) return false;
             if (result.ToString() == "true") return true;
@@ -142,26 +129,20 @@ app:
         /// Get application version.
         /// </summary>
         /// <returns>Application version in string or null if not specified.</returns>
-        public string GetAppVersion()
-        {
-            return (from section in (IDictionary<object, object>)configDocument
-                    where (string)section.Key == "app"
-                    from value in (IDictionary<object, object>)section.Value
-                    where (string)value.Key == "version"
-                    select value.Value).First()?.ToString();
-        }
+        public string GetAppVersion() => (from section in (IDictionary<object, object>)configDocument
+                                          where (string)section.Key == "app"
+                                          from value in (IDictionary<object, object>)section.Value
+                                          where (string)value.Key == "version"
+                                          select value.Value).FirstOrDefault()?.ToString();
 
         /// <summary>
         /// Get arguments that will be passed into application
         /// </summary>
         /// <returns>String of arguments will be passed into application, null if not specified.</returns>
-        public string GetAppArgs()
-        {
-            return (from section in (IDictionary<object, object>)configDocument
-                    where (string)section.Key == "app"
-                    from value in (IDictionary<object, object>)section.Value
-                    where (string)value.Key == "args"
-                    select value.Value).First()?.ToString();
-        }
+        public string GetAppArgs() => (from section in (IDictionary<object, object>)configDocument
+                                       where (string)section.Key == "app"
+                                       from value in (IDictionary<object, object>)section.Value
+                                       where (string)value.Key == "args"
+                                       select value.Value).FirstOrDefault()?.ToString();
     }
 }
