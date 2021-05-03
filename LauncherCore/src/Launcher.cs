@@ -71,7 +71,8 @@ app:
 
             try
             {
-                configDocument = new Deserializer().Deserialize(new StreamReader(configPath));
+                using var configReader = new StreamReader(configPath);
+                configDocument = new Deserializer().Deserialize(configReader);
             }
             catch (IOException)
             {
