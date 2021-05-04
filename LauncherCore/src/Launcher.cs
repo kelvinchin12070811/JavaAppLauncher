@@ -85,7 +85,9 @@ app:
         /// </summary>
         public void LaunchApplication()
         {
-
+            var pathReader = new JVMPathReader();
+            var path = pathReader.GetOptimalJVM(GetMinimumJVMVersion(), GetMaximumJVMVersion());
+            Console.WriteLine("Found JVM at: {0}", path);
         }
 
         /// <summary>
@@ -164,5 +166,16 @@ app:
                                          from value in (IDictionary<object, object>)section.Value
                                          where (string)value.Key == "jvm download path"
                                          select value.Value).FirstOrDefault()?.ToString();
+
+        /// <summary>
+        /// Get alternate JVM path which specified in the config file, path of JVM must point to bin folder fo JVM
+        /// Distribution.
+        /// </summary>
+        /// <returns>Path to bin folder of JVM distribution or null if not specified.</returns>
+        public string GetAlternateJVMPath() => (from section in (IDictionary<object, object>)configDocument
+                                                where (string)section.Key == "jvm"
+                                                from value in (IDictionary<object, object>)section.Value
+                                                where (string)value.Key == "alternate jvm path"
+                                                select value.Value).FirstOrDefault()?.ToString();
     }
 }

@@ -10,6 +10,7 @@ namespace ConsoleLauncher
             try
             {
                 Launcher.Instance.InitLauncher(args, Launcher.ApplicationType.Console);
+#if DEBUG
                 Console.WriteLine("min jvm ver: {0}", Launcher.Instance.GetMinimumJVMVersion());
                 Console.WriteLine("max jvm ver: {0}", Launcher.Instance.GetMaximumJVMVersion());
                 Console.WriteLine("jvm args: {0}", Launcher.Instance.GetJVMArgs());
@@ -18,6 +19,8 @@ namespace ConsoleLauncher
 
                 Console.WriteLine("app version: {0}", Launcher.Instance.GetAppVersion());
                 Console.WriteLine("app args: {0}", Launcher.Instance.GetAppArgs());
+#endif
+                Launcher.Instance.LaunchApplication();
             }
             catch (Exception e)
             {
