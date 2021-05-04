@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LauncherCore;
 
 namespace ConsoleLauncher
@@ -10,6 +11,7 @@ namespace ConsoleLauncher
             try
             {
                 Launcher.Instance.InitLauncher(args, Launcher.ApplicationType.Console);
+
 #if DEBUG
                 Console.WriteLine("min jvm ver: {0}", Launcher.Instance.GetMinimumJVMVersion());
                 Console.WriteLine("max jvm ver: {0}", Launcher.Instance.GetMaximumJVMVersion());
@@ -26,6 +28,11 @@ namespace ConsoleLauncher
             {
                 Console.Error.WriteLine(e.Message);
             }
+
+#if DEBUG
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+#endif
         }
     }
 }

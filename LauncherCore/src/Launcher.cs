@@ -93,22 +93,30 @@ app:
         /// <summary>
         /// Get minimum JVM version required.
         /// </summary>
-        /// <returns>String of JVM version, null if not specified.</returns>
-        public string GetMinimumJVMVersion() => (from section in (IDictionary<object, object>)configDocument
-                                                 where (string)section.Key == "jvm"
-                                                 from value in (IDictionary<object, object>)section.Value
-                                                 where (string)value.Key == "min version"
-                                                 select value.Value).FirstOrDefault().ToString();
+        /// <returns>JVM version, null if not specified.</returns>
+        public Version GetMinimumJVMVersion()
+        {
+            var version = (from section in (IDictionary<object, object>)configDocument
+                           where (string)section.Key == "jvm"
+                           from value in (IDictionary<object, object>)section.Value
+                           where (string)value.Key == "min version"
+                           select value.Value).FirstOrDefault()?.ToString();
+            return version == null ? null : new Version(version);
+        }
 
         /// <summary>
         /// Get maximum JVM version required.
         /// </summary>
-        /// <returns>String of JVM version, null if not specified.</returns>
-        public string GetMaximumJVMVersion() => (from section in (IDictionary<object, object>)configDocument
-                                                 where (string)section.Key == "jvm"
-                                                 from value in (IDictionary<object, object>)section.Value
-                                                 where (string)value.Key == "max version"
-                                                 select value.Value).FirstOrDefault()?.ToString();
+        /// <returns>JVM version, null if not specified.</returns>
+        public Version GetMaximumJVMVersion()
+        {
+            var version = (from section in (IDictionary<object, object>)configDocument
+                           where (string)section.Key == "jvm"
+                           from value in (IDictionary<object, object>)section.Value
+                           where (string)value.Key == "max version"
+                           select value.Value).FirstOrDefault()?.ToString();
+            return version == null ? null : new Version(version);
+        }
 
         /// <summary>
         /// Get Arguments that will be passed into JVM on launch.
