@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LauncherCore
@@ -51,7 +49,8 @@ namespace LauncherCore
                 return File.Exists(altJvmPath) ? altJvmPath : null;
             }
 
-            GetEnvJVM(appType);
+            GetJVMsFromEnvironmentVar(appType);
+            GetJVMsFromRegistry(appType);
 
             var selectedJvm = from version in installedJvms
                               where version.Key.CompareTo(minVer) >= 0
@@ -64,7 +63,7 @@ namespace LauncherCore
         /// Get the default JVM located in the environment variables
         /// </summary>
         /// <param name="appType">Type of the application, determine which type of JVM to search.</param>
-        private void GetEnvJVM(Launcher.ApplicationType appType)
+        private void GetJVMsFromEnvironmentVar(Launcher.ApplicationType appType)
         {
             var jvmExecutable = appType == Launcher.ApplicationType.Console ? "java.exe" : "javaw.exe";
             var envVar = Environment.GetEnvironmentVariable("path").Split(";");
@@ -78,6 +77,23 @@ namespace LauncherCore
                     installedJvms.Add(version, new SortedSet<string>());
                 installedJvms[version].Add(path);
             }
+        }
+
+        /// <summary>
+        /// Extract installed JVMs from Windows registry.
+        /// </summary>
+        /// <param name="appType">Define the type of application.</param>
+        private void GetJVMsFromRegistry(Launcher.ApplicationType appType)
+        {
+            string jvmExecutable = appType == Launcher.ApplicationType.Console ? "java.exe" : "javaw.exe";
+            using var regJavaSoft = Registry.LocalMachine.OpenSubKey("Software\\JavaSoft");
+            using var regJDK = regJavaSoft.OpenSubKey("JDK");
+            using var regJRE = regJavaSoft.OpenSubKey("JRE");
+            using var regJDK2 = regJavaSoft.OpenSubKey("Java Development Kit");
+            using var regJRE2 = regJavaSoft.OpenSubKey("Java Runtime Environment");
+
+            foreach (var itr in regJDK2.GetSubKeyNames())
+                Console.WriteLine(new Version(itr));
         }
     }
 }
