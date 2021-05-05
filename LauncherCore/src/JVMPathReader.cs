@@ -60,7 +60,9 @@ namespace LauncherCore
                               where version.Key.CompareTo(minVer) >= 0
                                   && (maxVer == null || version.Key.CompareTo(maxVer) <= 0)
                               select version.Value;
-            return selectedJvm.FirstOrDefault()?.First()?.ToString();
+            return (from version in selectedJvm
+                    orderby version descending
+                    select version).FirstOrDefault()?.FirstOrDefault()?.ToString();
         }
 
         /// <summary>
@@ -78,7 +80,17 @@ namespace LauncherCore
                 if (!File.Exists(path)) continue;
                 try
                 {
-                    var version = new Version(JavaVersionStringPattern.Match(path).Value);
+                    var jvmRoot = Path.GetFileName(Path.GetFullPath(Path.Combine(itr, "..")));
+                    var version = new Version(JavaVersionStringPattern.Match(jvmRoot).Value);
+
+                    if (version <= LegacyJVMVersion)
+                    {
+                        var legacyPattern = new Regex(@"1\.\d+\.\d+_\d+");
+                        var legacyVersion = legacyPattern.Match(jvmRoot).Value.Replace('_', '.');
+                        legacyVersion = Regex.Replace(legacyVersion, @"1\.", "");
+                        version = new Version(legacyVersion);
+                    }
+
                     if (!installedJvms.ContainsKey(version))
                         installedJvms.Add(version, new SortedSet<string>());
                     installedJvms[version].Add(path);
