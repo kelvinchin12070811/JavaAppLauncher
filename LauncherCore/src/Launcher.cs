@@ -6,6 +6,7 @@ using System;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LauncherCore
 {
@@ -101,7 +102,16 @@ app:
                            from value in (IDictionary<object, object>)section.Value
                            where (string)value.Key == "min version"
                            select value.Value).FirstOrDefault()?.ToString();
-            return version == null ? null : new Version(version);
+            if (version == null) return null;
+            var parsed = new Version(JVMPathReader.JavaVersionStringPattern.Match(version).Value);
+
+            if (parsed <= JVMPathReader.LegacyJVMVersion)
+            {
+                version = Regex.Replace(version.Replace('_', '.'), @"^1\.", "");
+                parsed = new Version(version);
+            }
+
+            return parsed;
         }
 
         /// <summary>
@@ -115,7 +125,16 @@ app:
                            from value in (IDictionary<object, object>)section.Value
                            where (string)value.Key == "max version"
                            select value.Value).FirstOrDefault()?.ToString();
-            return version == null ? null : new Version(version);
+            if (version == null) return null;
+            var parsed = new Version(JVMPathReader.JavaVersionStringPattern.Match(version).Value);
+
+            if (parsed <= JVMPathReader.LegacyJVMVersion)
+            {
+                version = Regex.Replace(version.Replace('_', '.'), @"^1\.", "");
+                parsed = new Version(version);
+            }
+
+            return parsed;
         }
 
         /// <summary>

@@ -16,11 +16,11 @@ namespace LauncherCore
         /// <summary>
         /// Determine the pattern of the java version string, refer https://openjdk.java.net/jeps/223 for more info.
         /// </summary>
-        private readonly Regex JavaVersionStringPattern = new Regex(@"[1-9][0-9]*((\.0)*\.[1-9][0-9]*)*");
+        public static readonly Regex JavaVersionStringPattern = new Regex(@"[1-9][0-9]*((\.0)*\.[1-9][0-9]*)*");
         /// <summary>
         /// Define as the laast
         /// </summary>
-        private readonly Version LegacyJVMVersion = new Version("1.8");
+        public static readonly Version LegacyJVMVersion = new Version("1.8");
 
         /// <summary>
         /// Lists of installed JVMs on current device.
