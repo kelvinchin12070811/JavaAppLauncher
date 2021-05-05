@@ -16,7 +16,11 @@ namespace LauncherCore
         /// <summary>
         /// Determine the pattern of the java version string, refer https://openjdk.java.net/jeps/223 for more info.
         /// </summary>
-        private const string JavaVersionStringPattern = @"[1-9][0-9]*((\.0)*\.[1-9][0-9]*)*";
+        private readonly Regex JavaVersionStringPattern = new Regex(@"[1-9][0-9]*((\.0)*\.[1-9][0-9]*)*");
+        /// <summary>
+        /// Define as the laast
+        /// </summary>
+        private readonly Version LegacyJVMVersion = new Version("1.8");
 
         /// <summary>
         /// Lists of installed JVMs on current device.
@@ -67,15 +71,22 @@ namespace LauncherCore
         {
             var jvmExecutable = appType == Launcher.ApplicationType.Console ? "java.exe" : "javaw.exe";
             var envVar = Environment.GetEnvironmentVariable("path").Split(";");
-            
+
             foreach (var itr in envVar)
             {
                 var path = Path.Join(itr, jvmExecutable);
                 if (!File.Exists(path)) continue;
-                var version = new Version(new Regex(JavaVersionStringPattern).Match(path).Value);
-                if (!installedJvms.ContainsKey(version))
-                    installedJvms.Add(version, new SortedSet<string>());
-                installedJvms[version].Add(path);
+                try
+                {
+                    var version = new Version(JavaVersionStringPattern.Match(path).Value);
+                    if (!installedJvms.ContainsKey(version))
+                        installedJvms.Add(version, new SortedSet<string>());
+                    installedJvms[version].Add(path);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
             }
         }
 
@@ -92,8 +103,32 @@ namespace LauncherCore
             using var regJDK2 = regJavaSoft.OpenSubKey("Java Development Kit");
             using var regJRE2 = regJavaSoft.OpenSubKey("Java Runtime Environment");
 
-            foreach (var itr in regJDK2.GetSubKeyNames())
-                Console.WriteLine(new Version(itr));
+            ParseJVMRegKey(regJDK);
+            ParseJVMRegKey(regJRE);
+            ParseJVMRegKey(regJDK2);
+            ParseJVMRegKey(regJRE2);
+        }
+
+        /// <summary>
+        /// Parse Oracle registry key and add them to discovered list.
+        /// </summary>
+        /// <param name="jvmKey">Registry key to parse.</param>
+        private void ParseJVMRegKey(RegistryKey jvmKey)
+        {
+            if (jvmKey == null) return;
+
+            foreach (var itr in jvmKey.GetSubKeyNames())
+            {
+                try
+                {
+                    var version = new Version(itr);
+                    Console.WriteLine(version);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
         }
     }
 }
