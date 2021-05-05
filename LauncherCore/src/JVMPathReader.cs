@@ -103,17 +103,17 @@ namespace LauncherCore
             using var regJDK2 = regJavaSoft.OpenSubKey("Java Development Kit");
             using var regJRE2 = regJavaSoft.OpenSubKey("Java Runtime Environment");
 
-            ParseJVMRegKey(regJDK);
-            ParseJVMRegKey(regJRE);
-            ParseJVMRegKey(regJDK2);
-            ParseJVMRegKey(regJRE2);
+            ParseJVMRegKey(regJDK, jvmExecutable);
+            ParseJVMRegKey(regJRE, jvmExecutable);
+            ParseJVMRegKey(regJDK2, jvmExecutable);
+            ParseJVMRegKey(regJRE2, jvmExecutable);
         }
 
         /// <summary>
         /// Parse Oracle registry key and add them to discovered list.
         /// </summary>
         /// <param name="jvmKey">Registry key to parse.</param>
-        private void ParseJVMRegKey(RegistryKey jvmKey)
+        private void ParseJVMRegKey(RegistryKey jvmKey, string exeName)
         {
             if (jvmKey == null) return;
 
@@ -121,8 +121,21 @@ namespace LauncherCore
             {
                 try
                 {
-                    var version = new Version(itr);
-                    Console.WriteLine(version);
+                    var version = new Version(JavaVersionStringPattern.Match(itr).Value);
+                    if ((from ch in itr where ch == '.' select ch).Count() <= 1)
+                        continue;
+
+                    if (version <= LegacyJVMVersion)
+                    {
+                        var strVersion =  Regex.Replace(itr.Replace('_', '.'), @"^1\.", "");
+                        version = new Version(strVersion);
+                    }
+
+                    if (!installedJvms.ContainsKey(version))
+                        installedJvms.Add(version, new SortedSet<string>());
+                    var javaHome = jvmKey.OpenSubKey(itr).GetValue("JAVAHOME").ToString();
+                    var jvmPath = Path.Combine(javaHome, "bin", exeName);
+                    installedJvms[version].Add(jvmPath);
                 }
                 catch (Exception)
                 {
