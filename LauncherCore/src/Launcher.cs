@@ -7,6 +7,7 @@ using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace LauncherCore
 {
@@ -88,7 +89,23 @@ app:
         {
             var pathReader = new JVMPathReader();
             var path = pathReader.GetOptimalJVM(GetMinimumJVMVersion(), GetMaximumJVMVersion());
+            var process = new Process()
+            {
+                StartInfo =
+                {
+                    Arguments = $"{GetJVMArgs()} -jar {GetJarName()} {GetAppArgs()}",
+                    FileName = path,
+                    UseShellExecute = AppType == ApplicationType.Windowed,
+                    WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                }
+            };
+#if DEBUG
             Console.WriteLine("Found JVM at: {0}", path);
+            Console.WriteLine($"Executable to run: {GetJarName()}");
+            Console.WriteLine($"Process working directory: {process.StartInfo.WorkingDirectory}");
+#endif
+            process.Start();
+            if (AppType == ApplicationType.Console) process.WaitForExit();
         }
 
         /// <summary>
@@ -103,7 +120,9 @@ app:
                            where (string)value.Key == "min version"
                            select value.Value).FirstOrDefault()?.ToString();
             if (version == null) return null;
-            var parsed = new Version(JVMPathReader.JavaVersionStringPattern.Match(version).Value);
+            version = JVMPathReader.JavaVersionStringPattern.Match(version).Value;
+            if ((from ch in version where ch == '.' select ch).Count() <= 0) version += ".0";
+            var parsed = new Version(version);
 
             if (parsed <= JVMPathReader.LegacyJVMVersion)
             {
@@ -126,7 +145,9 @@ app:
                            where (string)value.Key == "max version"
                            select value.Value).FirstOrDefault()?.ToString();
             if (version == null) return null;
-            var parsed = new Version(JVMPathReader.JavaVersionStringPattern.Match(version).Value);
+            version = JVMPathReader.JavaVersionStringPattern.Match(version).Value;
+            if ((from ch in version where ch == '.' select ch).Count() <= 0) version += ".0";
+            var parsed = new Version(version);
 
             if (parsed <= JVMPathReader.LegacyJVMVersion)
             {
@@ -204,5 +225,22 @@ app:
                                                 from value in (IDictionary<object, object>)section.Value
                                                 where (string)value.Key == "alternate jvm path"
                                                 select value.Value).FirstOrDefault()?.ToString();
+
+        /// <summary>
+        /// Get jar file to execute. If jar name not found in config file, jar name will be considered as {exeName}.jar
+        /// </summary>
+        /// <returns>Name of the jar file to execute.</returns>
+        public string GetJarName()
+        {
+            string path = (from section in (IDictionary<object, object>)configDocument
+                            where (string)section.Key == "app"
+                            from value in (IDictionary<object, object>)section.Value
+                            where (string)value.Key == "jar name"
+                            select value.Value).FirstOrDefault()?.ToString();
+            if (path != null) return path;
+            string exePath = Assembly.GetEntryAssembly().Location;
+            exePath = $"{Path.GetFileNameWithoutExtension(exePath)}.jar";
+            return exePath;
+        }
     }
 }
